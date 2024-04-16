@@ -10,6 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DecisionRequest {
     private String personalCode;
+    private int age;
     private Long loanAmount;
     private int loanPeriod;
 }
