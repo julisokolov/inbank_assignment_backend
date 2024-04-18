@@ -26,6 +26,7 @@ class DecisionEngineTest {
     private String segment2PersonalCode;
     private String segment3PersonalCode;
 
+    // Example personal codes for each segment
     @BeforeEach
     void setUp() {
         debtorPersonalCode = "37605030299";
@@ -33,13 +34,15 @@ class DecisionEngineTest {
         segment2PersonalCode = "38411266610";
         segment3PersonalCode = "35006069515";
     }
-
+    
+    // Testing case when requester has debt
     @Test
     void testDebtorPersonalCode() {
         assertThrows(NoValidLoanException.class,
                 () -> decisionEngine.calculateApprovedLoan(debtorPersonalCode, 18, 4000L, 12));
     }
 
+    // Testing results when the requester is from the first segment
     @Test
     void testSegment1PersonalCode() throws InvalidLoanPeriodException, InvalidAgeException, NoValidLoanException,
             InvalidPersonalCodeException, InvalidLoanAmountException {
@@ -48,6 +51,7 @@ class DecisionEngineTest {
         assertEquals(20, decision.getLoanPeriod());
     }
 
+    // Testing results when the requester is from the second segment
     @Test
     void testSegment2PersonalCode() throws InvalidLoanPeriodException, InvalidAgeException, NoValidLoanException,
             InvalidPersonalCodeException, InvalidLoanAmountException {
@@ -56,6 +60,7 @@ class DecisionEngineTest {
         assertEquals(12, decision.getLoanPeriod());
     }
 
+    // Testing results when the requester is from the third segment
     @Test
     void testSegment3PersonalCode() throws InvalidLoanPeriodException, InvalidAgeException, NoValidLoanException,
             InvalidPersonalCodeException, InvalidLoanAmountException {
@@ -64,6 +69,7 @@ class DecisionEngineTest {
         assertEquals(12, decision.getLoanPeriod());
     }
 
+    //Testing case when personal code is invalid
     @Test
     void testInvalidPersonalCode() {
         String invalidPersonalCode = "12345678901";
@@ -71,6 +77,7 @@ class DecisionEngineTest {
                 () -> decisionEngine.calculateApprovedLoan(invalidPersonalCode, 18, 4000L, 12));
     }
 
+    //Testing case when age is invalid
     @Test
     void testInvalidAge() {
         int invalidAge = 17;
@@ -78,6 +85,7 @@ class DecisionEngineTest {
                 () -> decisionEngine.calculateApprovedLoan("50307172740", invalidAge, 4000L, 12));
     }
 
+    //Testing case when loan amount is invalid
     @Test
     void testInvalidLoanAmount() {
         Long tooLowLoanAmount = DecisionEngineConstants.MINIMUM_LOAN_AMOUNT - 1L;
@@ -90,6 +98,7 @@ class DecisionEngineTest {
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 18, tooHighLoanAmount, 12));
     }
 
+    //Testing case when loan period is invalid
     @Test
     void testInvalidLoanPeriod() {
         int tooShortLoanPeriod = DecisionEngineConstants.MINIMUM_LOAN_PERIOD - 1;
@@ -102,6 +111,7 @@ class DecisionEngineTest {
                 () -> decisionEngine.calculateApprovedLoan(segment1PersonalCode, 18, 4000L, tooLongLoanPeriod));
     }
 
+    //Testing case when person requested smaller amount than the maximum available for him
     @Test
     void testFindSuitableLoanPeriod() throws InvalidLoanPeriodException, InvalidAgeException, NoValidLoanException,
             InvalidPersonalCodeException, InvalidLoanAmountException {
@@ -110,6 +120,7 @@ class DecisionEngineTest {
         assertEquals(12, decision.getLoanPeriod());
     }
 
+    //Testing case when suitable amount and period couldn't be found
     @Test
     void testNoValidLoanFound() {
         assertThrows(NoValidLoanException.class,
